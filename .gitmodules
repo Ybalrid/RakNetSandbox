@@ -1,0 +1,3 @@
+[submodule "libraries/RakNet"]
+	path = libraries/RakNet
+	url = https://github.com/Ybalrid/RakNet
