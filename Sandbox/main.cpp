@@ -16,7 +16,7 @@ enum GameMessages
 	ID_GAME_MESSAGE_1 = ID_USER_PACKET_ENUM + 1
 };
 
-inline void pause()
+inline void pauseInput()
 {
 	std::cout << "Press RETURN to continue\n";
 	std::cin.get();
@@ -77,7 +77,7 @@ int main()
 			{
 				RakNet::RakString rs;
 				RakNet::BitStream bsIn(packet->data, packet->length, false);
-				bsIn.IgnoreBytes(sizeof RakNet::MessageID);
+				bsIn.IgnoreBytes(sizeof (RakNet::MessageID));
 				bsIn.Read(rs);
 				std::cout << rs << '\n';
 			}
@@ -127,5 +127,5 @@ int main()
 
 	RakNet::RakPeerInterface::DestroyInstance(peer);
 
-	pause();
+	pauseInput();
 }
