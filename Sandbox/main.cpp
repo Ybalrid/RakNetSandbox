@@ -8,6 +8,15 @@
 
 #include <thread>
 
+#pragma pack(push, 1)
+
+struct echoPacket
+{
+	unsigned char type;
+	char message[255];
+};
+#pragma pack(pop)
+
 constexpr const auto SERVER_PORT{ 42420 };
 constexpr const auto MAX_CLIENT{ 10 };
 
@@ -75,11 +84,8 @@ int main()
 			{
 			case ID_GAME_MESSAGE_1:
 			{
-				RakNet::RakString rs;
-				RakNet::BitStream bsIn(packet->data, packet->length, false);
-				bsIn.IgnoreBytes(sizeof RakNet::MessageID);
-				bsIn.Read(rs);
-				std::cout << rs << '\n';
+				echoPacket* p = reinterpret_cast<echoPacket*>(packet->data);
+				std::cout << p->message << '\n';
 			}
 			break;
 			case ID_REMOTE_DISCONNECTION_NOTIFICATION:
@@ -95,10 +101,13 @@ int main()
 			{
 				std::cout << "Our connection request has been accepted\n";
 
-				RakNet::BitStream bsOut;
+				/*RakNet::BitStream bsOut;
 				bsOut.Write(RakNet::MessageID(ID_GAME_MESSAGE_1));
-				bsOut.Write("Hello World");
-				peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+				bsOut.Write("Hello World");*/
+				echoPacket p;
+				p.type = ID_GAME_MESSAGE_1;
+				strcpy_s(p.message, "Hello World");
+				peer->Send(reinterpret_cast<char*>(&p), sizeof(p), HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 			}
 			break;
 			case ID_NEW_INCOMING_CONNECTION:
