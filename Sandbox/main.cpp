@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cstring>
 
 #include <RakPeerInterface.h>
 #include <MessageIdentifiers.h>
@@ -106,7 +107,7 @@ int main()
 				bsOut.Write("Hello World");*/
 				echoPacket p;
 				p.type = ID_GAME_MESSAGE_1;
-				strcpy_s(p.message, "Hello World");
+				strcpy(p.message, "Hello World");
 				peer->Send(reinterpret_cast<char*>(&p), sizeof(p), HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 			}
 			break;
